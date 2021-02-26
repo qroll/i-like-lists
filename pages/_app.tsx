@@ -1,8 +1,15 @@
 import type { AppProps } from "next/app";
+import { ThemeProvider } from "styled-components";
 import "../styles/globals.css";
 
-function MyApp({ Component, pageProps }: AppProps): JSX.Element {
-  return <Component {...pageProps} />;
-}
+const theme = {};
 
-export default MyApp;
+export default function App({ Component, pageProps }: AppProps): JSX.Element {
+  return (
+    <>
+      <ThemeProvider theme={theme}>
+        <Component {...pageProps} />
+      </ThemeProvider>
+    </>
+  );
+}
