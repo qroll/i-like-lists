@@ -7,6 +7,10 @@ export default function Home(): JSX.Element {
     window.location.href = "/login";
   };
 
+  const goToRegister = () => {
+    window.location.href = "/register";
+  };
+
   return (
     <Container>
       <Head>
@@ -15,6 +19,7 @@ export default function Home(): JSX.Element {
       </Head>
       <H1>i-like-lists</H1>
       <button onClick={goToLogin}>Login</button>
+      <button onClick={goToRegister}>Register</button>
     </Container>
   );
 }
