@@ -3,6 +3,7 @@ import { Model } from "objection";
 class User extends Model {
   id!: string;
   username!: string;
+  password!: string;
 
   static get tableName() {
     return "user";
@@ -14,6 +15,7 @@ class User extends Model {
       properties: {
         id: { type: "string" },
         username: { type: "string", minLength: 1, maxLength: 255 },
+        password: { type: "string", minLength: 1, maxLength: 255 },
       },
     };
   }

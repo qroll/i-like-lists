@@ -1,6 +1,7 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import User from "../models/user";
+import argon2 from "argon2";
 
 passport.serializeUser<User["id"]>((user, done) => {
   done(null, user.id);
@@ -21,7 +22,15 @@ passport.use(
       if (!user) {
         done(null, null);
       } else {
-        done(null, user);
+        const hasMatchingPassword = await argon2.verify(user.password, password, {
+          type: argon2.argon2id,
+        });
+
+        if (hasMatchingPassword) {
+          done(null, user);
+        } else {
+          done(null, null);
+        }
       }
     } catch (err) {
       done(err);

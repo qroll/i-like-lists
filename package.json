@@ -8,12 +8,14 @@
     "start": "next start",
     "db:migrate": "knex migrate:latest",
     "docker:up": "docker-compose up -d",
+    "docker:up:fresh": "docker-compose down && docker-compose build --no-cache && docker-compose up -d",
     "docker:down": "docker-compose down"
   },
   "dependencies": {
     "@types/node": "^14.14.14",
     "@types/react": "^17.0.0",
     "@types/styled-components": "^5.1.7",
+    "argon2": "^0.27.2",
     "axios": "^0.21.1",
     "cookie-session": "^1.4.0",
     "knex": "^0.95.4",
