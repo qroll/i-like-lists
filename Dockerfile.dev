@@ -1,6 +1,8 @@
 # Build stage
 FROM node:12.20.1-alpine3.12 AS builder
 
+RUN apk add bash
+
 WORKDIR /src
 
 COPY tsconfig.json .

@@ -1,8 +1,19 @@
+import { NextApiRequest, NextApiResponse } from "next";
+import { NextHandler } from "next-connect";
 import { ZodError } from "zod";
 import { HttpError } from "./errors";
 
-export const defaultErrorHandler = (err, req, res, next): void => {
-  console.log(`[ERROR] ${err.message}`);
+export const defaultErrorHandler = (
+  err: unknown,
+  req: NextApiRequest,
+  res: NextApiResponse,
+  next: NextHandler
+): void => {
+  if (err instanceof Error) {
+    console.log(`[ERROR] ${err.message}`);
+  } else {
+    console.log(`[ERROR] ${JSON.stringify(err)}`);
+  }
 
   if (err instanceof ZodError) {
     res.status(400);

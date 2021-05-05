@@ -1,7 +1,7 @@
 import cookieSession from "cookie-session";
 import nc from "next-connect";
 import passport from "./passport";
-import "../../lib/database";
+import "../database";
 
 const authMiddleware = nc()
   .use(

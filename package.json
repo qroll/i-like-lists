@@ -6,10 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "db": "npm run db:migrate && npm run db:seed",
     "db:migrate": "knex migrate:latest",
     "db:seed": "knex seed:run",
     "docker:up": "docker-compose up -d",
-    "docker:up:fresh": "docker-compose down && docker-compose build --no-cache && docker-compose up -d",
+    "docker:up:fresh": "docker-compose down && docker-compose build --no-cache && docker-compose up -d --renew-anon-volumes",
     "docker:down": "docker-compose down"
   },
   "dependencies": {
@@ -19,6 +20,9 @@
     "argon2": "^0.27.2",
     "axios": "^0.21.1",
     "cookie-session": "^1.4.0",
+    "cors": "^2.8.5",
+    "csurf": "^1.11.0",
+    "helmet": "^4.6.0",
     "knex": "^0.95.4",
     "next": "10.0.3",
     "next-connect": "^0.10.0",
@@ -35,6 +39,8 @@
   },
   "devDependencies": {
     "@types/cookie-session": "^2.0.42",
+    "@types/cors": "^2.8.10",
+    "@types/csurf": "^1.11.1",
     "@types/passport": "^1.0.6",
     "@types/passport-local": "^1.0.33",
     "@types/uuid": "^8.3.0",
