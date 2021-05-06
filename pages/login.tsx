@@ -1,8 +1,10 @@
 import axios from "axios";
+import { useRouter } from "next/dist/client/router";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { Container } from "../components/Layout";
 
 export default function LoginPage(): JSX.Element {
+  const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -19,9 +21,20 @@ export default function LoginPage(): JSX.Element {
     event.preventDefault();
     setErrorMessage(null);
 
+    const redirectUrl = router.query.redirect;
+
     try {
-      const res = await axios.post("/api/login", { username, password }, { maxRedirects: 0 });
-      window.location.href = res.request.responseURL;
+      const res = await axios.post(
+        "/api/login",
+        { username, password },
+        {
+          maxRedirects: 0,
+          params: {
+            redirect: redirectUrl,
+          },
+        }
+      );
+      window.location.href = res.data.redirectUrl;
     } catch (err) {
       let message = "An error occured";
       if (axios.isAxiosError(err)) {
