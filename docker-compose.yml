@@ -7,7 +7,7 @@ services:
       - "3000:3000"
     volumes:
       - .:/src
-      - node_modules:/src/node_modules
+      - /src/node_modules
     links:
       - db
     command: ["npm", "run", "dev"]
@@ -19,5 +19,3 @@ services:
       POSTGRES_DB: "i-like-lists"
       POSTGRES_USER: "app"
       POSTGRES_PASSWORD: "password"
-volumes:
-  node_modules:
