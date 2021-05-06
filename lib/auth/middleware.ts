@@ -1,9 +1,10 @@
 import cookieSession from "cookie-session";
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiResponse } from "next";
 import nc, { NextHandler } from "next-connect";
 import "../database";
 import { HttpError } from "../error/errors";
 import passport from "./passport";
+import { ApiRequest } from "./types";
 
 const sessionMiddleware = nc()
   .use(
@@ -19,7 +20,7 @@ export default sessionMiddleware;
 
 export const authMiddleware = nc()
   .use(sessionMiddleware)
-  .use((req: NextApiRequest, res: NextApiResponse, next: NextHandler) => {
+  .use((req: ApiRequest, res: NextApiResponse, next: NextHandler) => {
     if (!req.user) {
       next(HttpError.Unauthorised());
     } else {

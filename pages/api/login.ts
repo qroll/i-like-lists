@@ -20,7 +20,7 @@ const handler = nc({
         error.errorCode = "ERR_INVALID_CREDENTIALS";
         next(error);
       } else {
-        req.login(user, (err) => {
+        (req as any).login(user, (err: any) => {
           next(err);
         });
       }

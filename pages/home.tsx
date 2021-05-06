@@ -6,6 +6,7 @@ import nc from "next-connect";
 import { authMiddleware } from "../lib/auth/middleware";
 import { loggingMiddleware } from "../lib/common/logger/middleware";
 import { webErrorHandler } from "../lib/error/handler";
+import { ApiRequest } from "../lib/auth/types";
 
 interface HomeProps {
   username: string;
@@ -32,13 +33,13 @@ export async function getServerSideProps(
 ): Promise<GetServerSidePropsResult<HomeProps>> {
   const { req, res } = context;
   try {
-    await nc().use(loggingMiddleware).use(authMiddleware).run(req, res);
+    await nc().use(loggingMiddleware).use(authMiddleware).run(req!, res!);
     return {
       props: {
-        username: req.user?.username,
+        username: (req as ApiRequest).user?.username,
       },
     };
   } catch (err) {
-    return webErrorHandler(err, req, res);
+    return webErrorHandler(err, req!, res!);
   }
 }

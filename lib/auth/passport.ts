@@ -4,7 +4,7 @@ import User from "../models/user";
 import argon2 from "argon2";
 
 passport.serializeUser<User["id"]>((user, done) => {
-  done(null, user.id);
+  done(null, (user as User).id);
 });
 
 passport.deserializeUser((id, done) => {

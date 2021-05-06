@@ -1,3 +1,4 @@
+import { IncomingMessage, ServerResponse } from "http";
 import { NextApiRequest, NextApiResponse, Redirect } from "next";
 import { NextHandler } from "next-connect";
 import { ZodError } from "zod";
@@ -39,8 +40,8 @@ export const apiErrorHandler = (
 
 export const webErrorHandler = (
   err: unknown,
-  req: NextApiRequest,
-  res: NextApiResponse
+  req: IncomingMessage,
+  res: ServerResponse
 ): { redirect: Redirect } => {
   if (err instanceof Error) {
     console.log(`[ERROR] ${err.message}`);
