@@ -11,24 +11,23 @@ const handler = nc({
 })
   .use(loggingMiddleware)
   .use(sessionMiddleware)
-        passport.authenticate("local", (err, user, info) => {
-          if (err) {
-            reject(err);
-          } else if (!user) {
-            const error = HttpError.BadRequest("Invalid credentials");
-            error.errorCode = "ERR_INVALID_CREDENTIALS";
-            reject(error);
-          } else {
-            resolve(user);
-          }
-        })(req, res);
-      });
-
-      next();
-    }
-  )
+  .use((req: NextApiRequest, res: NextApiResponse, next: NextHandler) => {
+    passport.authenticate("local", (err, user, info) => {
+      if (err) {
+        next(err);
+      } else if (!user) {
+        const error = HttpError.BadRequest("Invalid credentials");
+        error.errorCode = "ERR_INVALID_CREDENTIALS";
+        next(error);
+      } else {
+        req.login(user, (err) => {
+          next(err);
+        });
+      }
+    })(req, res, next);
+  })
   .post((req: NextApiRequest, res: NextApiResponse) => {
-    res.redirect("/home");
+    res.json({ redirectUrl: "/home" });
   });
 
 export default handler;
