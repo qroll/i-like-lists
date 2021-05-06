@@ -1,9 +1,9 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiRequest, NextApiResponse, Redirect } from "next";
 import { NextHandler } from "next-connect";
 import { ZodError } from "zod";
 import { HttpError } from "./errors";
 
-export const defaultErrorHandler = (
+export const apiErrorHandler = (
   err: unknown,
   req: NextApiRequest,
   res: NextApiResponse,
@@ -35,4 +35,32 @@ export const defaultErrorHandler = (
   }
 
   res.end();
+};
+
+export const webErrorHandler = (
+  err: unknown,
+  req: NextApiRequest,
+  res: NextApiResponse
+): { redirect: Redirect } => {
+  if (err instanceof Error) {
+    console.log(`[ERROR] ${err.message}`);
+  } else {
+    console.log(`[ERROR] ${JSON.stringify(err)}`);
+  }
+
+  if (err instanceof HttpError && err.httpCode === 401) {
+    return {
+      redirect: {
+        destination: `/login?redirect=${req.url}`,
+        permanent: false,
+      },
+    };
+  } else {
+    return {
+      redirect: {
+        destination: `/error`,
+        permanent: false,
+      },
+    };
+  }
 };

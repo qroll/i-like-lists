@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import * as z from "zod";
 import "../../lib/database";
 import { HttpError } from "../../lib/error/errors";
-import { defaultErrorHandler } from "../../lib/error/handler";
+import { apiErrorHandler } from "../../lib/error/handler";
 import User from "../../lib/models/user";
 
 import argon2 from "argon2";
@@ -16,7 +16,7 @@ const registerSchema = z.object({
 });
 
 const handler = nc({
-  onError: defaultErrorHandler,
+  onError: apiErrorHandler,
 }).post(
   async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
     const input = registerSchema.parse(req.body);

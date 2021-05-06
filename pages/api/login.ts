@@ -1,17 +1,16 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import nc, { NextHandler } from "next-connect";
-import authMiddleware from "../../lib/auth/middleware";
+import sessionMiddleware from "../../lib/auth/middleware";
 import { HttpError } from "../../lib/error/errors";
-import { defaultErrorHandler } from "../../lib/error/handler";
+import { apiErrorHandler } from "../../lib/error/handler";
 import passport from "../../lib/auth/passport";
+import { loggingMiddleware } from "../../lib/common/logger/middleware";
 
 const handler = nc({
-  onError: defaultErrorHandler,
+  onError: apiErrorHandler,
 })
-  .use(authMiddleware)
-  .use(
-    async (req: NextApiRequest, res: NextApiResponse, next: NextHandler): Promise<void> => {
-      await new Promise((resolve, reject) => {
+  .use(loggingMiddleware)
+  .use(sessionMiddleware)
         passport.authenticate("local", (err, user, info) => {
           if (err) {
             reject(err);
