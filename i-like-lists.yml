@@ -1,0 +1,45 @@
+databases:
+  - engine: PG
+    name: db
+    num_nodes: 1
+    size: db-s-dev-database
+    version: "12"
+name: i-like-lists
+region: sgp
+services:
+  - dockerfile_path: Dockerfile
+    envs:
+      - key: DATABASE_HOST
+        scope: RUN_TIME
+        value: ${db.HOSTNAME}
+      - key: DATABASE_USERNAME
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:NupJzzmUI4R++8xxp1tkWqKteeo97RL/:fCAqox8u7TZef9tKi3DU54eVetvkMjqVjrOJmXiU]
+      - key: DATABASE_PASSWORD
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:SvzskHJLIGTUkvkZt6QgJTJUre3dMEsO:E/pV4usjAfjd/uW/tGfec5Bv7zDulC7mkGm2VD3O]
+      - key: DATABASE_DATABASE
+        scope: RUN_AND_BUILD_TIME
+        value: ${db.DATABASE}
+      - key: DATABASE_PORT
+        scope: RUN_AND_BUILD_TIME
+        value: ${db.PORT}
+      - key: DATABASE_SSL
+        scope: RUN_AND_BUILD_TIME
+        value: "true"
+      - key: DATABASE_CERT
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+        value: EV[1:8SRUVrDlMEW6LW7jERC+QM3OqbZZL/bg:zt2HSAOpWM6UVqQ8Yq2fAkVYg8+zxom36qpOXA==]
+    github:
+      branch: main
+      repo: qroll/i-like-lists
+    http_port: 3000
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    name: i-like-lists
+    routes:
+      - path: /
+    source_dir: /
