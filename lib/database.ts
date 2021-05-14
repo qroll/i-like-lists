@@ -12,7 +12,7 @@ const knex = Knex({
     ssl:
       process.env.DATABASE_SSL === "true"
         ? {
-            rejectUnauthorized: false,
+            rejectUnauthorized: process.env.DATABASE_TLS_REJECT_UNAUTHORIZED === "true",
             ca: process.env.DATABASE_CERT,
           }
         : false,
