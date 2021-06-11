@@ -1,7 +1,12 @@
 import styled from "styled-components";
 
-export const H1 = styled.h1``;
-export const BaseText = styled.span``;
+export const H1 = styled.h1`
+  font-size: 2em;
+`;
+
+export const BaseText = styled.span`
+  font-size: 1em;
+`;
 
 interface TextProps {
   className?: string;
