@@ -163,15 +163,23 @@ export default function Recycle(): JSX.Element {
       //   setSearchState(LoadState.Loaded);
       // }
 
+      const getScore = (query: string, choice: string) => {
+        const score = fuzzball.ratio(query, choice);
+        return score < 50 ? 0 : score;
+      };
+
       const results = await fuzzball.extractAsPromised(searchInput, database, {
         limit: 4,
+        cutoff: 50,
         scorer: (query, choice, options) => {
           return (
-            fuzzball.ratio(query, choice.displayLabel, options) +
-            choice.tags.reduce((a, c) => a + fuzzball.ratio(query, c, options), 0)
+            getScore(query, choice.displayLabel) +
+            choice.tags.reduce((a, c) => a + getScore(query, c), 0)
           );
         },
       });
+
+      console.log(results);
 
       const mappedData = results.map((result) => result[0]);
       setSearchResult(mappedData);
