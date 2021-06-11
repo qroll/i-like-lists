@@ -25,6 +25,7 @@
     "dotenv": "^9.0.2",
     "flexsearch": "^0.7.0",
     "fuzzball": "^1.4.0",
+    "fuzzysort": "^1.1.4",
     "helmet": "^4.6.0",
     "knex": "^0.95.4",
     "next": "10.0.3",

@@ -1,10 +1,10 @@
 import Head from "next/head";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
-import { Container } from "../components/Layout";
 import { Document } from "flexsearch";
 import { useDebouncedEffect } from "../utils/useDebounce";
 import fuzzball from "fuzzball";
+import fuzzysort from "fuzzysort";
 
 const randomPrompts = ["a plastic bag", "bubble wrap"];
 
@@ -89,6 +89,12 @@ const database: Data[] = [
   },
 ];
 
+const flattenedDatabase = database.map((d, i) => ({
+  id: i,
+  ...d,
+  tags: d.tags.join(" "),
+}));
+
 // function generateIndex() {
 //   const index = new Document<Data>({
 //     document: {
@@ -163,25 +169,37 @@ export default function Recycle(): JSX.Element {
       //   setSearchState(LoadState.Loaded);
       // }
 
-      const getScore = (query: string, choice: string) => {
-        const score = fuzzball.ratio(query, choice);
-        return score < 50 ? 0 : score;
-      };
+      // const getScore = (query: string, choice: string) => {
+      //   const score = fuzzball.ratio(query, choice);
+      //   return score < 50 ? 0 : score;
+      // };
 
-      const results = await fuzzball.extractAsPromised(searchInput, database, {
+      // const results = await fuzzball.extractAsPromised(searchInput, database, {
+      //   limit: 4,
+      //   cutoff: 50,
+      //   scorer: (query, choice, options) => {
+      //     return (
+      //       getScore(query, choice.displayLabel) +
+      //       choice.tags.reduce((a, c) => a + getScore(query, c), 0)
+      //     );
+      //   },
+      // });
+
+      // console.log(results);
+
+      // const mappedData = results.map((result) => result[0]);
+      // setSearchResult(mappedData);
+      // setSearchState(LoadState.Loaded);
+
+      const results = await fuzzysort.goAsync(searchInput, flattenedDatabase, {
         limit: 4,
-        cutoff: 50,
-        scorer: (query, choice, options) => {
-          return (
-            getScore(query, choice.displayLabel) +
-            choice.tags.reduce((a, c) => a + getScore(query, c), 0)
-          );
-        },
+        allowTypo: true,
+        keys: ["displayLabel", "tags"],
       });
 
       console.log(results);
 
-      const mappedData = results.map((result) => result[0]);
+      const mappedData = results.map((result) => database[result.obj.id]);
       setSearchResult(mappedData);
       setSearchState(LoadState.Loaded);
     },
@@ -210,6 +228,16 @@ export default function Recycle(): JSX.Element {
     </Container>
   );
 }
+
+const Container = styled.div`
+  min-height: 100vh;
+  padding: 25vh 0.5em 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: #efefef;
+`;
 
 interface SearchResultProps {
   results: Data[];
