@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { Container } from "../components/Layout";
 import { Document } from "flexsearch";
 import { useDebouncedEffect } from "../utils/useDebounce";
+import fuzzball from "fuzzball";
 
 const randomPrompts = ["a plastic bag", "bubble wrap"];
 
@@ -88,21 +89,21 @@ const database: Data[] = [
   },
 ];
 
-function generateIndex() {
-  const index = new Document<Data>({
-    document: {
-      index: ["displayLabel", "tags"],
-    },
-    tokenize: "full",
-    encoder: "extra",
-  });
+// function generateIndex() {
+//   const index = new Document<Data>({
+//     document: {
+//       index: ["displayLabel", "tags"],
+//     },
+//     tokenize: "full",
+//     encoder: "extra",
+//   });
 
-  for (let i = 0; i < database.length; i++) {
-    index.add(i, database[i]);
-  }
+//   for (let i = 0; i < database.length; i++) {
+//     index.add(i, database[i]);
+//   }
 
-  return index;
-}
+//   return index;
+// }
 
 enum LoadState {
   Initial,
@@ -126,9 +127,9 @@ export default function Recycle(): JSX.Element {
     setPrompt(text + "?");
 
     // set up index
-    const index = generateIndex();
-    setSearchIndex(index);
-    setSearchState(LoadState.NotLoaded);
+    // const index = generateIndex();
+    // setSearchIndex(index);
+    // setSearchState(LoadState.NotLoaded);
   }, []);
 
   const updateSearchInput = useCallback((e: ChangeEvent<HTMLInputElement>) => {
@@ -142,25 +143,39 @@ export default function Recycle(): JSX.Element {
         return;
       }
 
-      if (searchIndex) {
-        setSearchState(LoadState.Loading);
+      // if (searchIndex) {
+      //   setSearchState(LoadState.Loading);
 
-        const results = await searchIndex.search(searchInput, ["displayLabel", "tags"]);
+      //   const results = await searchIndex.search(searchInput, ["displayLabel", "tags"]);
 
-        const uniqueIds = Array.from(
-          results
-            .filter((r) => !!r)
-            .reduce((set, r) => {
-              r.result.forEach((item) => set.add(item));
-              return set;
-            }, new Set<number>())
-        );
+      //   const uniqueIds = Array.from(
+      //     results
+      //       .filter((r) => !!r)
+      //       .reduce((set, r) => {
+      //         r.result.forEach((item) => set.add(item));
+      //         return set;
+      //       }, new Set<number>())
+      //   );
 
-        const mappedData = uniqueIds.map((id) => database[id]);
-        setSearchResult(mappedData);
+      //   const mappedData = uniqueIds.map((id) => database[id]);
+      //   setSearchResult(mappedData);
 
-        setSearchState(LoadState.Loaded);
-      }
+      //   setSearchState(LoadState.Loaded);
+      // }
+
+      const results = await fuzzball.extractAsPromised(searchInput, database, {
+        limit: 4,
+        scorer: (query, choice, options) => {
+          return (
+            fuzzball.ratio(query, choice.displayLabel, options) +
+            choice.tags.reduce((a, c) => a + fuzzball.ratio(query, c, options), 0)
+          );
+        },
+      });
+
+      const mappedData = results.map((result) => result[0]);
+      setSearchResult(mappedData);
+      setSearchState(LoadState.Loaded);
     },
     [searchIndex, searchInput],
     500
