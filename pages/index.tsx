@@ -1,10 +1,8 @@
+import fuzzysort from "fuzzysort";
 import Head from "next/head";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
-import { Document } from "flexsearch";
 import { useDebouncedEffect } from "../utils/useDebounce";
-import fuzzball from "fuzzball";
-import fuzzysort from "fuzzysort";
 
 const randomPrompts = ["a plastic bag", "bubble wrap"];
 
@@ -95,22 +93,6 @@ const flattenedDatabase = database.map((d, i) => ({
   tags: d.tags.join(" "),
 }));
 
-// function generateIndex() {
-//   const index = new Document<Data>({
-//     document: {
-//       index: ["displayLabel", "tags"],
-//     },
-//     tokenize: "full",
-//     encoder: "extra",
-//   });
-
-//   for (let i = 0; i < database.length; i++) {
-//     index.add(i, database[i]);
-//   }
-
-//   return index;
-// }
-
 enum LoadState {
   Initial,
   NotLoaded,
@@ -121,7 +103,6 @@ enum LoadState {
 
 export default function Recycle(): JSX.Element {
   const [searchInput, setSearchInput] = useState("");
-  const [searchIndex, setSearchIndex] = useState<Document<Data> | null>(null);
   const [searchResult, setSearchResult] = useState<Data[]>([]);
   const [searchState, setSearchState] = useState<LoadState>(LoadState.Initial);
   const [prompt, setPrompt] = useState("");
@@ -131,11 +112,6 @@ export default function Recycle(): JSX.Element {
     const randomIndex = Math.floor(Math.random() * randomPrompts.length);
     const text = randomPrompts[randomIndex];
     setPrompt(text + "?");
-
-    // set up index
-    // const index = generateIndex();
-    // setSearchIndex(index);
-    // setSearchState(LoadState.NotLoaded);
   }, []);
 
   const updateSearchInput = useCallback((e: ChangeEvent<HTMLInputElement>) => {
@@ -149,48 +125,6 @@ export default function Recycle(): JSX.Element {
         return;
       }
 
-      // if (searchIndex) {
-      //   setSearchState(LoadState.Loading);
-
-      //   const results = await searchIndex.search(searchInput, ["displayLabel", "tags"]);
-
-      //   const uniqueIds = Array.from(
-      //     results
-      //       .filter((r) => !!r)
-      //       .reduce((set, r) => {
-      //         r.result.forEach((item) => set.add(item));
-      //         return set;
-      //       }, new Set<number>())
-      //   );
-
-      //   const mappedData = uniqueIds.map((id) => database[id]);
-      //   setSearchResult(mappedData);
-
-      //   setSearchState(LoadState.Loaded);
-      // }
-
-      // const getScore = (query: string, choice: string) => {
-      //   const score = fuzzball.ratio(query, choice);
-      //   return score < 50 ? 0 : score;
-      // };
-
-      // const results = await fuzzball.extractAsPromised(searchInput, database, {
-      //   limit: 4,
-      //   cutoff: 50,
-      //   scorer: (query, choice, options) => {
-      //     return (
-      //       getScore(query, choice.displayLabel) +
-      //       choice.tags.reduce((a, c) => a + getScore(query, c), 0)
-      //     );
-      //   },
-      // });
-
-      // console.log(results);
-
-      // const mappedData = results.map((result) => result[0]);
-      // setSearchResult(mappedData);
-      // setSearchState(LoadState.Loaded);
-
       const results = await fuzzysort.goAsync(searchInput, flattenedDatabase, {
         limit: 4,
         allowTypo: true,
@@ -203,7 +137,7 @@ export default function Recycle(): JSX.Element {
       setSearchResult(mappedData);
       setSearchState(LoadState.Loaded);
     },
-    [searchIndex, searchInput],
+    [searchInput],
     500
   );
 
