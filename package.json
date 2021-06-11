@@ -28,7 +28,7 @@
     "fuzzysort": "^1.1.4",
     "helmet": "^4.6.0",
     "knex": "^0.95.4",
-    "next": "10.0.3",
+    "next": "^10.2.3",
     "next-connect": "^0.10.0",
     "objection": "^2.2.15",
     "passport": "^0.4.1",
