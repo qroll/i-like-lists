@@ -10,6 +10,7 @@ COPY package.json .
 RUN npm ci
 
 COPY components ./components
+COPY features ./features
 COPY lib ./lib
 COPY pages ./pages
 COPY public ./public
