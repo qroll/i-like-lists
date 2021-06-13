@@ -4,6 +4,8 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 This was meant as a simple playground for Next.js, but as always, it blew out of scope. For now, the home page is a simple search function to determine if an item can be recycled (in Singapore).
 
+The app is hosted on Digital Ocean's new App Platform. [Access the site here](https://i-like-lists-w8kly.ondigitalocean.app/).
+
 ## Getting Started
 
 First, run the development server:
