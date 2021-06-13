@@ -1,3 +1,4 @@
+import { GetStaticProps } from "next";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
@@ -6,6 +7,7 @@ import { Match } from "../features/recycling/components/Match";
 import { SearchBar } from "../features/recycling/components/SearchBar";
 import { Data } from "../features/recycling/data/database";
 import { randomPrompts } from "../features/recycling/data/prompts";
+import { fetchData } from "../features/recycling/utils/fetchData";
 import { fuzzySearch } from "../features/recycling/utils/fuzzySearch";
 import { useDebouncedEffect } from "../utils/useDebounce";
 
@@ -17,7 +19,12 @@ enum LoadState {
   Error,
 }
 
-export default function Recycle(): JSX.Element {
+interface RecycleProps {
+  database: Data[];
+}
+
+export default function Recycle(props: RecycleProps): JSX.Element {
+  const { database } = props;
   const [searchInput, setSearchInput] = useState("");
   const [searchResult, setSearchResult] = useState<Data[]>([]);
   const [searchState, setSearchState] = useState<LoadState>(LoadState.Initial);
@@ -39,7 +46,7 @@ export default function Recycle(): JSX.Element {
       setSearchState(LoadState.Loading);
 
       const [results] = await Promise.all([
-        fuzzySearch(searchInput),
+        fuzzySearch(searchInput, database),
         new Promise((resolve) => setTimeout(resolve, 1000)),
       ]);
 
@@ -66,7 +73,7 @@ export default function Recycle(): JSX.Element {
 
 const Container = styled.div`
   min-height: 100vh;
-  padding: 25vh 0.5em 0;
+  padding: 25vh 0.5em 25vh;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -143,3 +150,11 @@ const NotFoundMessage = styled.h1`
   font-size: 1.5em;
   color: #333;
 `;
+
+export const getStaticProps: GetStaticProps<RecycleProps> = async (context) => {
+  const database = await fetchData();
+  return {
+    props: { database },
+    revalidate: 60 * 30, // 30 minutes
+  };
+};

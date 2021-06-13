@@ -1,12 +1,13 @@
 export interface Data {
   name: string;
   displayLabel: string;
+  material: string;
   description: string;
   tags: string[];
   isRecyclable: "YES" | "NO" | "DEPENDS";
 }
 
-export const database: Data[] = [
+export const database: Partial<Data>[] = [
   {
     name: "plastic-recycling-symbol-1",
     displayLabel: "Plastic Recycling Symbol #1",

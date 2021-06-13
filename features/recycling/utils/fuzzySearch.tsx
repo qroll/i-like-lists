@@ -1,16 +1,18 @@
 import fuzzysort from "fuzzysort";
-import { Data, database } from "../data/database";
-
-const flattenedDatabase = database.map((d, i) => ({
-  id: i,
-  ...d,
-}));
+import { Data } from "../data/database";
 
 export async function fuzzySearch(
   searchInput: string,
-  options?: { minScore: number }
+  database: Data[],
+  options?: { minScore?: number; maxResults?: number }
 ): Promise<Data[]> {
   const minScore = options?.minScore ?? -Infinity;
+  const maxResults = options?.maxResults ?? 4;
+
+  const flattenedDatabase = database.map((d, i) => ({
+    id: i,
+    ...d,
+  }));
 
   const fuzzyOptions = {
     limit: 1,
@@ -47,6 +49,6 @@ export async function fuzzySearch(
     }
   });
 
-  const mappedData = results.map((result) => database[result.id]);
+  const mappedData = results.map((result) => database[result.id]).slice(0, maxResults);
   return mappedData;
 }
