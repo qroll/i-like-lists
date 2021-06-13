@@ -1,18 +1,13 @@
-import fuzzysort from "fuzzysort";
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+import { TriangleIcon } from "../components/icons";
 import { Match } from "../features/recycling/components/Match";
 import { SearchBar } from "../features/recycling/components/SearchBar";
-import { Data, database } from "../features/recycling/data/database";
+import { Data } from "../features/recycling/data/database";
 import { randomPrompts } from "../features/recycling/data/prompts";
+import { fuzzySearch } from "../features/recycling/utils/fuzzySearch";
 import { useDebouncedEffect } from "../utils/useDebounce";
-
-const flattenedDatabase = database.map((d, i) => ({
-  id: i,
-  ...d,
-  tags: d.tags.join(" "),
-}));
 
 enum LoadState {
   Initial,
@@ -41,16 +36,14 @@ export default function Recycle(): JSX.Element {
         return;
       }
 
-      const results = await fuzzysort.goAsync(searchInput, flattenedDatabase, {
-        limit: 4,
-        allowTypo: true,
-        keys: ["displayLabel", "tags"],
-      });
+      setSearchState(LoadState.Loading);
 
-      console.log(results);
+      const [results] = await Promise.all([
+        fuzzySearch(searchInput),
+        new Promise((resolve) => setTimeout(resolve, 1000)),
+      ]);
 
-      const mappedData = results.map((result) => database[result.obj.id]);
-      setSearchResult(mappedData);
+      setSearchResult(results);
       setSearchState(LoadState.Loaded);
     },
     [searchInput],
@@ -65,7 +58,7 @@ export default function Recycle(): JSX.Element {
       </Head>
       <Prompt>can i recycle...</Prompt>
       <SearchBar searchInput={searchInput} searchPrompt={prompt} onChange={setSearchInput} />
-      {searchState === LoadState.Loading && <div />}
+      {searchState === LoadState.Loading && <Loading />}
       {searchState === LoadState.Loaded && <SearchResult results={searchResult} />}
     </Container>
   );
@@ -81,13 +74,41 @@ const Container = styled.div`
   background-color: #efefef;
 `;
 
+const Loading = () => {
+  return <Svg as={TriangleIcon} fill="#333" />;
+};
+
+const bounce = keyframes`
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.5);
+  }
+  70% {
+    transform: scale(1);
+  }
+  90% {
+    transform: scale(0.8);
+  }
+  100% {
+    transform: scale(1);
+  }
+`;
+
+const Svg = styled.svg`
+  height: 2rem;
+  animation: ${bounce} 1s infinite ease-in-out;
+  margin: 1rem;
+`;
+
 interface SearchResultProps {
   results: Data[];
 }
 
 const SearchResult = ({ results }: SearchResultProps) => {
   if (results.length === 0) {
-    return <div>No matches found</div>;
+    return <NotFoundMessage>no matches found :(</NotFoundMessage>;
   }
 
   const firstMatch = results[0];
@@ -116,4 +137,9 @@ const SearchResult = ({ results }: SearchResultProps) => {
 
 const Prompt = styled.h1`
   font-size: 2em;
+`;
+
+const NotFoundMessage = styled.h1`
+  font-size: 1.5em;
+  color: #333;
 `;
