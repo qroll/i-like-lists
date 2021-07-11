@@ -1,6 +1,6 @@
 import axios from "axios";
 import { ChangeEvent, FormEvent, useState } from "react";
-import { Container } from "../components/Layout";
+import { FlexContainer } from "../components/Layout";
 
 export default function RegisterPage(): JSX.Element {
   const [username, setUsername] = useState("");
@@ -51,7 +51,7 @@ export default function RegisterPage(): JSX.Element {
   };
 
   return (
-    <Container>
+    <FlexContainer>
       <form onSubmit={postForm}>
         <label>Username</label>
         <input type="text" name="username" value={username} onChange={handleUsernameChange} />
@@ -69,6 +69,6 @@ export default function RegisterPage(): JSX.Element {
         <button>Register</button>
       </form>
       <div>{errorMessage}</div>
-    </Container>
+    </FlexContainer>
   );
 }

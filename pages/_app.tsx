@@ -1,15 +1,13 @@
 import type { AppProps } from "next/app";
-import { ThemeProvider } from "styled-components";
+import { UserTheme } from "../components/Theme";
 import "../styles/globals.css";
-
-const theme = {};
 
 export default function App({ Component, pageProps }: AppProps): JSX.Element {
   return (
     <>
-      <ThemeProvider theme={theme}>
+      <UserTheme>
         <Component {...pageProps} />
-      </ThemeProvider>
+      </UserTheme>
     </>
   );
 }

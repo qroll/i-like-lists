@@ -1,31 +1,33 @@
-import styled from "styled-components";
+import { SystemProps, x } from "@xstyled/styled-components";
 
-export const H1 = styled.h1`
-  font-size: 2em;
-`;
-
-export const BaseText = styled.span`
-  font-size: 1em;
-`;
-
-interface TextProps {
+interface TextProps extends SystemProps {
   className?: string;
-  bold?: boolean;
-  italic?: boolean;
   children?: React.ReactNode;
+  as?: "p" | "span";
 }
 
 export const Text = (props: TextProps): JSX.Element => {
-  const { className, bold, italic, children } = props;
+  const { className, children, as = "p", ...p } = props;
+  const Component = x[as];
   return (
-    <BaseText
-      className={className}
-      style={{
-        fontStyle: italic === true ? "italic" : undefined,
-        fontWeight: bold === true ? "bold" : undefined,
-      }}
-    >
+    <Component className={className} {...p}>
       {children}
-    </BaseText>
+    </Component>
+  );
+};
+
+interface HeadingProps extends SystemProps {
+  className?: string;
+  children?: React.ReactNode;
+  as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+}
+
+export const Heading = (props: HeadingProps): JSX.Element => {
+  const { className, children, as = "h1", ...p } = props;
+  const Component = x[as];
+  return (
+    <Component className={className} {...p}>
+      {children}
+    </Component>
   );
 };

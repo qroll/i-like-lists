@@ -1,6 +1,6 @@
 import { GetServerSidePropsResult, NextPageContext } from "next";
 import Head from "next/head";
-import { Container } from "../components/Layout";
+import { FlexContainer } from "../components/Layout";
 import { H1, Text } from "../components/Text";
 import nc from "next-connect";
 import { authMiddleware } from "../lib/auth/middleware";
@@ -15,7 +15,7 @@ interface HomeProps {
 export default function Home(props: HomeProps): JSX.Element {
   const { username } = props;
   return (
-    <Container>
+    <FlexContainer>
       <Head>
         <title>i like lists</title>
         <link rel="icon" href="/favicon.ico" />
@@ -24,7 +24,7 @@ export default function Home(props: HomeProps): JSX.Element {
       <Text>
         Welcome <Text bold>{username}</Text>
       </Text>
-    </Container>
+    </FlexContainer>
   );
 }
 

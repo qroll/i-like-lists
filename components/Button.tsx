@@ -1,23 +1,36 @@
-import styled from "styled-components";
+import styled, { th } from "@xstyled/styled-components";
 
-export const Button = styled.button`
+interface ButtonProps {
+  disabled?: boolean;
+}
+
+export const Button = styled.buttonBox<ButtonProps>`
   background-color: #626293;
   border: none;
-  border-radius: 3px;
+  border-radius: default;
   color: #fff;
   cursor: pointer;
-  font-size: 1em;
-  font-weight: 500;
-  margin: 0.5em;
+  font-size: m;
+  font-weight: normal;
   outline: none;
-  padding: 0.5em 0.8em;
+  box-shadow: none;
+  padding: xs m;
 
-  &:focus {
-    background-color: #414162;
-    box-shadow: 0 0 0 3px #7878a5;
-  }
-
+  &:focus,
   &:hover {
     background-color: #414162;
+    text-decoration: underline;
+    outline: none;
+    box-shadow: none;
+  }
+
+  &:disabled,
+  &:focus:disabled,
+  &:hover:disabled {
+    background-color: ${th.color("gray-400")};
+    cursor: not-allowed;
+    text-decoration: none;
+    outline: none;
+    box-shadow: none;
   }
 `;

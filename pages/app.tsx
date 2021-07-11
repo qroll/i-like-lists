@@ -1,8 +1,7 @@
 import Head from "next/head";
-import styled from "styled-components";
 import { Button } from "../components/Button";
-import { Card, Container } from "../components/Layout";
-import { H1 } from "../components/Text";
+import { FlexContainer } from "../components/Layout";
+import { Heading } from "../components/Text";
 
 export default function App(): JSX.Element {
   const goToLogin = () => {
@@ -14,25 +13,23 @@ export default function App(): JSX.Element {
   };
 
   return (
-    <Container>
+    <FlexContainer pt="xl" pb="xl">
       <Head>
         <title>i like lists</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <TitleCard>
-        <H1>i-like-lists</H1>
-        <Button onClick={goToLogin}>Login</Button>
-        <Button onClick={goToRegister}>Register</Button>
-      </TitleCard>
-    </Container>
+      <Heading as="h1" fontSize="4xl" fontWeight="bold" mt="20vh">
+        i-like-lists
+      </Heading>
+      <Button mt="2xl" onClick={goToLogin}>
+        Login
+      </Button>
+      <Button mt="m" onClick={goToRegister}>
+        Register
+      </Button>
+      <Button mt="m" onClick={goToRegister} disabled>
+        Delete Website
+      </Button>
+    </FlexContainer>
   );
 }
-
-const TitleCard = styled(Card)`
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  max-width: 720px;
-  padding: 2em 1em;
-  width: 80vw;
-`;

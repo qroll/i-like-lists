@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { useRef, useState } from "react";
-import { Container } from "../components/Layout";
+import { FlexContainer } from "../components/Layout";
 import { H1, Text } from "../components/Text";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -114,7 +114,7 @@ export default function ListPage(props: ListProps): JSX.Element {
   const [lists, setLists] = useState([list1, list2]);
 
   return (
-    <Container>
+    <FlexContainer>
       <Head>
         <title>i like lists</title>
         <link rel="icon" href="/favicon.ico" />
@@ -141,6 +141,6 @@ export default function ListPage(props: ListProps): JSX.Element {
           </div>
         );
       })}
-    </Container>
+    </FlexContainer>
   );
 }

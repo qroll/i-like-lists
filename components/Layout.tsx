@@ -1,16 +1,15 @@
-import styled from "styled-components";
+import styled from "@xstyled/styled-components";
 
-export const Container = styled.div`
+export const FlexContainer = styled.divBox`
   min-height: 100vh;
-  padding: 0 0.5em;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   background-color: #efefef;
 `;
 
-export const Card = styled.div`
+export const Card = styled.divBox`
   background-color: #ffffff;
   border-radius: 0.3em;
   box-shadow: 0 0 3px #ccc;

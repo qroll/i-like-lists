@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useRouter } from "next/dist/client/router";
 import { ChangeEvent, FormEvent, useState } from "react";
-import { Container } from "../components/Layout";
+import { FlexContainer } from "../components/Layout";
 
 export default function LoginPage(): JSX.Element {
   const router = useRouter();
@@ -47,7 +47,7 @@ export default function LoginPage(): JSX.Element {
   };
 
   return (
-    <Container>
+    <FlexContainer>
       <form onSubmit={postForm}>
         <label>Username</label>
         <input type="text" name="username" value={username} onChange={handleUsernameChange} />
@@ -56,6 +56,6 @@ export default function LoginPage(): JSX.Element {
         <button>Login</button>
       </form>
       <div>{errorMessage}</div>
-    </Container>
+    </FlexContainer>
   );
 }
