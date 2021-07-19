@@ -1,35 +1,26 @@
 import Head from "next/head";
-import { Button } from "../components/Button";
-import { FlexContainer } from "../components/Layout";
+import { ColumnContainer, FlexContainer } from "../components/Layout";
 import { Heading } from "../components/Text";
+import { PageButton } from "../features/app/components/PageButton";
 
 export default function App(): JSX.Element {
-  const goToLogin = () => {
-    window.location.href = "/login";
-  };
-
-  const goToRegister = () => {
-    window.location.href = "/register";
-  };
-
   return (
-    <FlexContainer pt="xl" pb="xl">
+    <FlexContainer p="$xl" justifyContent="center">
       <Head>
         <title>i like lists</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Heading as="h1" fontSize="4xl" fontWeight="bold" mt="20vh">
+      <Heading as="h1" fontSize="$4xl" fontWeight="$bold">
         i-like-lists
       </Heading>
-      <Button mt="2xl" onClick={goToLogin}>
-        Login
-      </Button>
-      <Button mt="m" onClick={goToRegister}>
-        Register
-      </Button>
-      <Button mt="m" onClick={goToRegister} disabled>
-        Delete Website
-      </Button>
+      <ColumnContainer mt="$m" alignItems="flex-start">
+        <PageButton href="/login" label="Login" />
+        <PageButton href="/register" label="Register" />
+        <PageButton
+          href="https://www.youtube.com/watch?v=k83hDT6bmCM&list=PLeeDS-Ydy9E1eWmcj0XhCWtPC6BkMArcy&index=6"
+          label="Pet a cat"
+        />
+      </ColumnContainer>
     </FlexContainer>
   );
 }

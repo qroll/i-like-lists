@@ -47,7 +47,7 @@ export default function LoginPage(): JSX.Element {
   };
 
   return (
-    <FlexContainer>
+    <FlexContainer p="$xl">
       <form onSubmit={postForm}>
         <label>Username</label>
         <input type="text" name="username" value={username} onChange={handleUsernameChange} />

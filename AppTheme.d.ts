@@ -1,0 +1,87 @@
+export interface AppTheme {
+    colors: {
+        "primary-50": string;
+        "primary-100": string;
+        "primary-200": string;
+        "primary-300": string;
+        "primary-400": string;
+        "primary-500": string;
+        "primary-600": string;
+        "primary-700": string;
+        "primary-800": string;
+        "primary-900": string;
+        "secondary-50": string;
+        "secondary-100": string;
+        "secondary-200": string;
+        "secondary-300": string;
+        "secondary-400": string;
+        "secondary-500": string;
+        "secondary-600": string;
+        "secondary-700": string;
+        "secondary-800": string;
+        "secondary-900": string;
+        "gray-50": string;
+        "gray-100": string;
+        "gray-200": string;
+        "gray-300": string;
+        "gray-400": string;
+        "gray-500": string;
+        "gray-600": string;
+        "gray-700": string;
+        "gray-800": string;
+        "gray-900": string;
+        "red-50": string;
+        "red-100": string;
+        "red-200": string;
+        "red-300": string;
+        "red-400": string;
+        "red-500": string;
+        "red-600": string;
+        "red-700": string;
+        "red-800": string;
+        "red-900": string;
+    },
+    breakpoints: string[];
+    fontSizes: {
+        xs: string;
+        sm: string;
+        default: string;
+        lg: string;
+        xl: string;
+        "2xl": string;
+        "3xl": string;
+        "4xl": string;
+    };
+    fontWeights: {
+        hairline: string;
+        thin: string;
+        light: string;
+        normal: string;
+        medium: string;
+        semibold: string;
+        bold: string;
+        extrabold: string;
+        black: string;
+    };
+    radii: {
+        none: string;
+        sm: string;
+        default: string;
+        md: string;
+        lg: string;
+        xl: string;
+        "2xl": string;
+        "3xl": string;
+        full: string;
+    };
+    space: {
+        0: string;
+        xxs: string;
+        xs: string;
+        s: string;
+        sm: string;
+        m: string;
+        l: string;
+        xl: string;
+    };
+}

@@ -64,7 +64,12 @@ export default function Recycle(props: RecycleProps): JSX.Element {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Prompt>can i recycle...</Prompt>
-      <SearchBar searchInput={searchInput} searchPrompt={prompt} onChange={setSearchInput} />
+      <SearchBar
+        searchInput={searchInput}
+        searchPrompt={prompt}
+        onChange={setSearchInput}
+        containerStyle={{ margin: "$xl" }}
+      />
       {searchState === LoadState.Loading && <Loading />}
       {searchState === LoadState.Loaded && <SearchResult results={searchResult} />}
     </Container>

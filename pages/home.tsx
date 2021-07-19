@@ -1,12 +1,12 @@
 import { GetServerSidePropsResult, NextPageContext } from "next";
+import nc from "next-connect";
 import Head from "next/head";
 import { FlexContainer } from "../components/Layout";
-import { H1, Text } from "../components/Text";
-import nc from "next-connect";
+import { Heading, Text } from "../components/Text";
 import { authMiddleware } from "../lib/auth/middleware";
+import { ApiRequest } from "../lib/auth/types";
 import { loggingMiddleware } from "../lib/common/logger/middleware";
 import { webErrorHandler } from "../lib/error/handler";
-import { ApiRequest } from "../lib/auth/types";
 
 interface HomeProps {
   username: string;
@@ -20,9 +20,11 @@ export default function Home(props: HomeProps): JSX.Element {
         <title>i like lists</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <H1>i-like-lists</H1>
+      <Heading as="h1" fontSize="$4xl">
+        i-like-lists
+      </Heading>
       <Text>
-        Welcome <Text bold>{username}</Text>
+        Welcome <Text fontWeight="$bold">{username}</Text>
       </Text>
     </FlexContainer>
   );

@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { useRef, useState } from "react";
 import { FlexContainer } from "../components/Layout";
-import { H1, Text } from "../components/Text";
+import { Heading, Text } from "../components/Text";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface ListProps {
@@ -119,12 +119,14 @@ export default function ListPage(props: ListProps): JSX.Element {
         <title>i like lists</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <H1>i-like-lists</H1>
+      <Heading as="h1" fontSize="$4xl">
+        i-like-lists
+      </Heading>
       {lists.map((list) => {
         const { id, name, items } = list;
         return (
           <div key={id}>
-            <Text bold>{name}</Text>
+            <Text fontWeight="$bold">{name}</Text>
             <div
               onDragOver={(e) => {
                 e.preventDefault();

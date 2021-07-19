@@ -1,6 +1,9 @@
-import { useRouter } from "next/dist/client/router";
-import { H1 } from "../components/Text";
+import { Heading } from "../components/Text";
 
-export default function ErrorPage() {
-  return <H1>Oh no :(</H1>;
+export default function ErrorPage(): JSX.Element {
+  return (
+    <Heading as="h1" fontSize="$4xl">
+      Oh no :(
+    </Heading>
+  );
 }

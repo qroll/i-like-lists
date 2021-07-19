@@ -1,24 +1,29 @@
-import styled, { th } from "@xstyled/styled-components";
+import { ButtonHTMLAttributes, MouseEvent } from "react";
+import styled from "styled-components";
+import { getSystemProps, SystemProps, th } from "./Theme";
 
-interface ButtonProps {
+interface ButtonProps extends SystemProps {
+  children: React.ReactNode;
   disabled?: boolean;
+  onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
+  type?: ButtonHTMLAttributes<any>["type"];
 }
 
-export const Button = styled.buttonBox<ButtonProps>`
-  background-color: #626293;
+const StyledButton = styled.button<SystemProps>`
+  background-color: ${th.color("primary-400")};
   border: none;
-  border-radius: default;
+  border-radius: ${th.radii("default")};
   color: #fff;
   cursor: pointer;
-  font-size: m;
+  font-size: ${th.fontSize("default")};
   font-weight: normal;
   outline: none;
   box-shadow: none;
-  padding: xs m;
+  padding: ${th.space("xs")} ${th.space("m")};
 
   &:focus,
   &:hover {
-    background-color: #414162;
+    background-color: ${th.color("primary-500")};
     text-decoration: underline;
     outline: none;
     box-shadow: none;
@@ -33,4 +38,11 @@ export const Button = styled.buttonBox<ButtonProps>`
     outline: none;
     box-shadow: none;
   }
+
+  ${getSystemProps()}
 `;
+
+export const Button = (props: ButtonProps): JSX.Element => {
+  const { children, ...buttonProps } = props;
+  return <StyledButton {...buttonProps}>{children}</StyledButton>;
+};
