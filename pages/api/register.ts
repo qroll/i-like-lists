@@ -1,7 +1,7 @@
 import argon2 from "argon2";
 import { NextApiResponse } from "next";
 import { v4 as uuidv4 } from "uuid";
-import * as z from "zod";
+import { z } from "zod";
 import "../../lib/database";
 import { HttpError } from "../../lib/error/errors";
 import User from "../../lib/models/user";

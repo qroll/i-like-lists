@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Form, Formik, FormikHelpers, FormikProps } from "formik";
-import { z } from "zod3";
+import { z } from "zod";
 import { FlexContainer } from "../components/Layout";
 import { FormikTextField } from "../components/form/Input";
 import { FormikSelect } from "../components/form/Select";
