@@ -1,12 +1,10 @@
 import { GetServerSidePropsResult, NextPageContext } from "next";
-import nc from "next-connect";
 import Head from "next/head";
 import { FlexContainer } from "../components/Layout";
 import { Heading, Text } from "../components/Text";
-import { authMiddleware } from "../lib/auth/middleware";
-import { ApiRequest } from "../lib/auth/types";
-import { loggingMiddleware } from "../lib/common/logger/middleware";
-import { webErrorHandler } from "../lib/error/handler";
+import UserModel from "../lib/models/user";
+import { DataFetcher } from "../utils/page/DataFetcher";
+import { Data, ServerSideProps, User } from "../utils/page/decorators";
 
 interface HomeProps {
   username: string;
@@ -33,15 +31,16 @@ export default function Home(props: HomeProps): JSX.Element {
 export async function getServerSideProps(
   context: NextPageContext
 ): Promise<GetServerSidePropsResult<HomeProps>> {
-  const { req, res } = context;
-  try {
-    await nc().use(loggingMiddleware).use(authMiddleware).run(req!, res!);
-    return {
-      props: {
-        username: (req as ApiRequest).user?.username,
-      },
-    };
-  } catch (err) {
-    return webErrorHandler(err, req!, res!);
+  class HomeDataFetcher extends DataFetcher {
+    @Data({ authRequired: true })
+    getServerSideProps(@User user: UserModel): GetServerSidePropsResult<HomeProps> {
+      return {
+        props: {
+          username: user.username,
+        },
+      };
+    }
   }
+
+  return ServerSideProps(HomeDataFetcher, context);
 }
