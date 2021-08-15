@@ -1,33 +1,56 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import nc, { NextHandler } from "next-connect";
-import sessionMiddleware from "../../lib/auth/middleware";
+import argon2 from "argon2";
+import { serialize } from "cookie";
+import { NextApiResponse } from "next";
+import { z } from "zod";
 import { HttpError } from "../../lib/error/errors";
-import { apiErrorHandler } from "../../lib/error/handler";
-import passport from "../../lib/auth/passport";
-import { loggingMiddleware } from "../../lib/common/logger/middleware";
+import User from "../../lib/models/user";
+import { ApiController } from "../../utils/api";
+import { encryptAndSignCookie, generateCsrf } from "../../utils/api/cookie";
+import { Api, Body, Method, Res } from "../../utils/api/decorators";
 
-const handler = nc({
-  onError: apiErrorHandler,
-})
-  .use(loggingMiddleware)
-  .use(sessionMiddleware)
-  .use((req: NextApiRequest, res: NextApiResponse, next: NextHandler) => {
-    passport.authenticate("local", (err, user, info) => {
-      if (err) {
-        next(err);
-      } else if (!user) {
-        const error = HttpError.BadRequest("Invalid credentials");
-        error.errorCode = "ERR_INVALID_CREDENTIALS";
-        next(error);
-      } else {
-        (req as any).login(user, (err: any) => {
-          next(err);
-        });
-      }
-    })(req, res, next);
-  })
-  .post((req: NextApiRequest, res: NextApiResponse) => {
-    res.json({ redirectUrl: "/home" });
-  });
+const loginSchema = z.object({
+  username: z.string(),
+  password: z.string(),
+});
 
-export default handler;
+class LoginController extends ApiController {
+  @Method({ bodySchema: loginSchema })
+  async post(@Res res: NextApiResponse, @Body body: z.infer<typeof loginSchema>) {
+    const { username, password } = body;
+    const user = await User.query().findOne("username", username);
+
+    if (!user) {
+      throw HttpError.Unauthorised();
+    }
+
+    const hasMatchingPassword = await argon2.verify(user.password, password, {
+      type: argon2.argon2id,
+    });
+
+    if (!hasMatchingPassword) {
+      throw HttpError.Unauthorised();
+    }
+
+    // set session cookies
+    const { csrfSecret, csrfToken } = await generateCsrf();
+    const cookie = encryptAndSignCookie({ csrfSecret, userId: user.id });
+
+    res.setHeader("Set-Cookie", [
+      serialize("csrf", csrfToken, {
+        sameSite: "strict",
+        maxAge: 60 * 60 * 24,
+        path: "/",
+      }),
+      serialize("session", cookie, {
+        sameSite: "strict",
+        maxAge: 60 * 60 * 24,
+        httpOnly: true,
+        path: "/",
+      }),
+    ]);
+
+    res.status(200).json({ redirectUrl: "/home" });
+  }
+}
+
+export default Api(LoginController);
