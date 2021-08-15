@@ -1,13 +1,12 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import nc from "next-connect";
+import argon2 from "argon2";
+import { NextApiResponse } from "next";
 import { v4 as uuidv4 } from "uuid";
 import * as z from "zod";
 import "../../lib/database";
 import { HttpError } from "../../lib/error/errors";
-import { apiErrorHandler } from "../../lib/error/handler";
 import User from "../../lib/models/user";
-
-import argon2 from "argon2";
+import { ApiController } from "../../utils/api";
+import { Api, Body, Method, Res } from "../../utils/api/decorators";
 
 const registerSchema = z.object({
   username: z.string().min(1).max(256),
@@ -15,11 +14,9 @@ const registerSchema = z.object({
   email: z.string().optional(),
 });
 
-const handler = nc({
-  onError: apiErrorHandler,
-}).post(
-  async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
-    const input = registerSchema.parse(req.body);
+class RegisterController extends ApiController {
+  @Method({ bodySchema: registerSchema })
+  async post(@Res res: NextApiResponse, @Body input: z.infer<typeof registerSchema>) {
     const { username, password } = input;
 
     const user = await User.query().findOne("username", username);
@@ -40,6 +37,6 @@ const handler = nc({
 
     res.redirect("/login");
   }
-);
+}
 
-export default handler;
+export default Api(RegisterController);
