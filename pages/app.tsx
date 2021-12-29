@@ -13,7 +13,7 @@ export default function App(): JSX.Element {
       <Heading as="h1" fontSize="$4xl" fontWeight="$bold">
         i-like-lists
       </Heading>
-      <ColumnContainer mt="$m" alignItems="flex-start">
+      <ColumnContainer mt="$m" alignItems="center">
         <PageButton href="/login" label="Login" />
         <PageButton href="/register" label="Register" />
         <PageButton

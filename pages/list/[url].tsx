@@ -1,10 +1,10 @@
 import { GetServerSidePropsResult, NextPageContext } from "next";
 import Head from "next/head";
-import { FlexContainer } from "../components/Layout";
-import { Heading, Text } from "../components/Text";
-import UserModel from "../lib/models/user";
-import { DataFetcher } from "../utils/page/DataFetcher";
-import { Data, ServerSideProps, User } from "../utils/page/decorators";
+import { FlexContainer } from "../../components/Layout";
+import { Heading } from "../../components/Text";
+import UserModel from "../../lib/models/user";
+import { DataFetcher } from "../../utils/page/DataFetcher";
+import { Data, ServerSideProps, User } from "../../utils/page/decorators";
 
 interface HomeProps {
   username: string;
@@ -21,12 +21,6 @@ export default function Home(props: HomeProps): JSX.Element {
       <Heading as="h1" fontSize="$4xl">
         i-like-lists
       </Heading>
-      <Text>
-        Welcome{" "}
-        <Text as="span" fontWeight="$bold">
-          {username}
-        </Text>
-      </Text>
     </FlexContainer>
   );
 }
